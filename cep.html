@@ -1,0 +1,97 @@
+<html>
+    <head>
+    <title>Pesquisar CEP</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- Adicionando Javascript -->
+    <script type="text/javascript" >
+    var ExtensaoEstaInstalada = false;
+    var idExtensao = "ccpdadeodjfedcegnjiddhllepigjchp";
+   
+    function PesquisarCEPFixo() {
+        if(!ExtensaoEstaInstalada)
+            return false;
+        var cep = "30130-003";
+        document.getElementById("cep").value = cep;
+        try {
+            var port = chrome.runtime.connect(idExtensao);
+            port.onMessage.addListener(function(response) {
+                if(!response.success){
+                    alert(response.message);
+                    return;
+                }
+                PreencherForm(response.data); 
+                port.disconnect();
+            });
+            port.postMessage({ FN: Shared.EnumFn.PesquisarCEP, data: cep });
+        }
+        catch(e){
+            console.log(e);
+        }
+        
+    }
+    function PreencherForm(conteudo){
+        if (!("erro"  in conteudo)) {
+            document.getElementById('rua').value=(conteudo.logradouro);
+            document.getElementById('bairro').value=(conteudo.bairro);
+            document.getElementById('cidade').value=(conteudo.localidade);
+            document.getElementById('uf').value=(conteudo.uf);
+            document.getElementById('ibge').value=(conteudo.ibge);
+        } 
+        else {
+            alert("CEP não encontrado.");
+        }
+    }
+    function ExtensaoInstalada() {
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+            if(request.readyState === 4) {
+                if(request.status !== 200) { 
+                    console.dir(request);
+                    alert("Extensão não instalada");
+                } 
+                else {
+                    var script = document.createElement('script');
+                    script.type = 'text/javascript';
+                    script.src = 'chrome-extension://'+idExtensao+'/src/Shared/EnumFn.js';    
+                    document.getElementsByTagName('head')[0].appendChild(script);
+                    ExtensaoEstaInstalada = true;
+                }
+            }
+        };
+        request.open('GET', 'chrome-extension://'+idExtensao+'/instalada.json');
+        request.send();
+    }
+
+    window.onload = () => {
+        ExtensaoInstalada();
+    };
+    </script>
+    <style>
+        label input{
+            margin-bottom: 7px;
+        }
+    </style>
+    </head>
+
+    <body>
+        <h4>Teste de Extensão</h4>
+    <!-- Inicio do formulario -->
+      <form method="get" action=".">
+        <label>Cep:
+        <input name="cep" type="text" id="cep" value="" size="10" maxlength="9" /></label><br />
+        <label>Rua:
+        <input name="rua" type="text" id="rua" size="60" /></label><br />
+        <label>Bairro:
+        <input name="bairro" type="text" id="bairro" size="40" /></label><br />
+        <label>Cidade:
+        <input name="cidade" type="text" id="cidade" size="40" /></label><br />
+        <label>Estado:
+        <input name="uf" type="text" id="uf" size="2" /></label><br />
+        <label>IBGE:
+        <input name="ibge" type="text" id="ibge" size="8" /></label><br />
+      </form>
+      <button onclick="PesquisarCEPFixo(); return false;">Pesquisar Cep 30130-003</button>
+    </body>
+
+    </html>
+    

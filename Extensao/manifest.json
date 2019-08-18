@@ -1,0 +1,58 @@
+{ 
+    "name"             : "Pesquisar CEP", 
+    "version"          : "1.0",
+    "description"      : "Pesquisa cep",
+    "permissions"      : [
+        "https://viacep.com.br/",
+        "storage", 
+        "declarativeContent", 
+        "activeTab",
+        "nativeMessaging",
+        "notifications"
+    ],
+    "externally_connectable": {
+        "matches": ["*://localhost/*"]
+    },
+    "content_scripts": [{
+        "matches": ["*://localhost/*"],
+        "js": [
+            "vendor/jquery-3.4.1.min.js",
+            "src/Shared/EnumFn.js", 
+            "src/Shared/ResponseMessage.js", 
+            "src/ContentScript/Mensagem.js", 
+            "src/ContentScript/ProcessarMensagem.js",
+            "src/ContentScript/Cep.js"
+        ]
+    }],
+    "web_accessible_resources": [ 
+        "instalada.json",
+        "src/Shared/EnumFn.js" 
+    ],
+    "background"       : {
+        "scripts": [
+            "vendor/jquery-3.4.1.min.js", 
+            "src/Shared/EnumFn.js", 
+            "src/Shared/ResponseMessage.js", 
+            "src/Background/ProcessarMensagem.js",
+            "src/Background/Cep.js",
+            "src/Background/background.js"
+        ],
+        "persistent": false
+    },
+    "page_action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "imagens/icone16.png",
+            "32": "imagens/icone32.png",
+            "48": "imagens/icone48.png",
+            "128": "imagens/icone128.png"
+        }
+    },
+    "icons": {
+        "16": "imagens/icone16.png",
+        "32": "imagens/icone32.png",
+        "48": "imagens/icone48.png",
+        "128": "imagens/icone128.png"
+    },
+    "manifest_version" : 2
+}
