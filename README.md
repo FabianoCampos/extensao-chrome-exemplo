@@ -1,4 +1,4 @@
-Extensao Chrome
+Extensão Chrome
 ===================
 
 Extensão para Google Chrome, criado como modelo para aprendizado.

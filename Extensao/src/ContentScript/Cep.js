@@ -5,7 +5,7 @@ ContentScript.Cep.Init = () => {
     //registrar eventos da pagina de cep
     $("input#cep").on("keypress", function(e){
         if(e.keyCode===13) {
-            Shared.Mensagem.Enviar(
+            ContentScript.Mensagem.Enviar(
                 {
                     FN : Shared.EnumFn.PesquisarCEP, 
                     data: $(this).val()
